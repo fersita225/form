@@ -35,5 +35,37 @@
       <button type="submit">Enviar mensaje</button>
     </form>
   </main>
+  <script>  
+    document.addEventListener("DOMContentLoaded", function () {
+  const formulario = document.getElementById("formularioContacto");
+
+  formulario.addEventListener("submit", function (e) {
+    e.preventDefault(); // Previene el envío
+
+    const nombre = document.getElementById("nombre").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const asunto = document.getElementById("asunto").value.trim();
+    const mensaje = document.getElementById("mensaje").value.trim();
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!nombre || !email || !asunto || !mensaje) {
+      alert("Por favor, completa todos los campos.");
+      return;
+    }
+
+    if (!emailRegex.test(email)) {
+      alert("Por favor, ingresa un correo electrónico válido.");
+      return;
+    }
+
+    // Si todo está correcto:
+    alert("Formulario enviado correctamente.");
+
+    // Aquí podrías enviar los datos con fetch() o limpiar el formulario:
+    formulario.reset();
+  });
+});
+  </script>
 </body>
 </html>
