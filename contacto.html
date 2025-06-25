@@ -35,37 +35,39 @@
       <button type="submit">Enviar mensaje</button>
     </form>
   </main>
-  <script>  
-    document.addEventListener("DOMContentLoaded", function () {
-  const formulario = document.getElementById("formularioContacto");
+<script>
+document.querySelector('form').addEventListener('submit', function(e) {
+  e.preventDefault(); // Evita que la página se recargue
 
-  formulario.addEventListener("submit", function (e) {
-    e.preventDefault(); // Previene el envío
+  // Obtener los valores del formulario
+  const nombre = document.getElementById('nombre').value;
+  const email = document.getElementById('email').value;
+  const asunto = document.getElementById('asunto').value;
+  const mensaje = document.getElementById('mensaje').value;
 
-    const nombre = document.getElementById("nombre").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const asunto = document.getElementById("asunto").value.trim();
-    const mensaje = document.getElementById("mensaje").value.trim();
+  // Guardar en localStorage (opcional)
+  const datosGuardados = JSON.parse(localStorage.getItem('formularios')) || [];
+  datosGuardados.push({ nombre, email, asunto, mensaje });
+  localStorage.setItem('formularios', JSON.stringify(datosGuardados));
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!nombre || !email || !asunto || !mensaje) {
-      alert("Por favor, completa todos los campos.");
-      return;
-    }
-
-    if (!emailRegex.test(email)) {
-      alert("Por favor, ingresa un correo electrónico válido.");
-      return;
-    }
-
-    // Si todo está correcto:
-    alert("Formulario enviado correctamente.");
-
-    // Aquí podrías enviar los datos con fetch() o limpiar el formulario:
-    formulario.reset();
+  // Crear el contenido CSV
+  let csvContent = "data:text/csv;charset=utf-8,";
+  csvContent += "Nombre,Correo,Asunto,Mensaje\n";
+  datosGuardados.forEach(function(item) {
+    csvContent += ${item.nombre},${item.email},${item.asunto},${item.mensaje}\n;
   });
+
+  // Crear y descargar el archivo CSV
+  const encodedUri = encodeURI(csvContent);
+  const link = document.createElement("a");
+  link.setAttribute("href", encodedUri);
+  link.setAttribute("download", "datos_formulario.csv");
+  document.body.appendChild(link);
+  link.click();
+
+  // Limpia el formulario
+  e.target.reset();
 });
-  </script>
+</script>
 </body>
 </html>
